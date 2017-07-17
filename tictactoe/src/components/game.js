@@ -5,23 +5,52 @@ import { History } from './history'
 
 export class Game extends Component {
 
-  state = {
-    winner: "",
-    gameover: false
+  
+
+  initiateGameState = () => {
+      return {      
+        numbers: [9, 9, 9, 9, 9, 9, 9, 9, 9],
+        winner: "",
+        gameover: false,
+        currentTurn: "X"
+      }
   }
+
+  state = this.initiateGameState();
 
 
   refreshClick = () => {
     console.log("in refresh click");
+
+    this.setState(this.initiateGameState());
+  }
+
+  squareClick = (index) => {
+console.log(index);
+
+    this.setState((prevState) => {
+      prevState.numbers[index] = prevState.currentTurn === "X" ? 1 : 0;
+      return { 
+        numbers: prevState.numbers,
+        currentTurn: prevState.currentTurn === "X" ? "O" : "X"
+       };
+    });
+    
+    
   }
 
   render() {
+    //this.setState({ numbers:  });
+    const {
+      numbers
+    } = this.state;
+
     return (
       <div>
         <div className="row text-center">
           <div className="col-md-offset-3 col-md-6" style={{border: "1px solid red"}}>
             
-              <Squares />
+              <Squares numbers={numbers} squareClick={this.squareClick} />
               
               <History />  
           </div>        

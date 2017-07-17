@@ -20,3 +20,26 @@
 .clear {
   clear: both;
 }
+
+.sq {
+  width: 33%;
+  height: 50px;
+  padding: 2px;
+  display: inline-block;
+  border: 1px solid red;
+}
+
+.green {
+  color: #449D44;
+}
+
+.blue {
+  color: #0000FF;
+}
+
+.sqbtn {
+  font-size: 15pt;
+  width: 45px;
+  height: 45px;
+  border: 1px solid black;
+}
