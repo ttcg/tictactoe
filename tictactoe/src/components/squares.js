@@ -32,7 +32,7 @@ export const Squares = (props) => {
     }
 
     return (
-        <div className="col-md-9">
+        <div className="col-md-6">
             
             {props.numbers.map((number, i) =>
             
