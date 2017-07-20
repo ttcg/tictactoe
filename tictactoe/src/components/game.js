@@ -45,14 +45,27 @@ export class Game extends Component {
   }
 
   checkWinningState = () => {
-    console.log(calculateWinner(this.state.numbers));
+    var foundWinner = calculateWinner(this.state.numbers);
+
+    if (foundWinner) {
+      this.setState((prevState) => {
+      return {
+        winner: prevState.currentTurn === "X" ? "O" : "X" // swap the current Turn again to get the real winner
+      }});
+    } else if (this.state.History.length === 9) { // all turns done, no move to make
+      this.setState({
+        gameover: true
+      })
+    }
   }
 
   render() {
     //this.setState({ numbers:  });
     const {
       numbers,
-      moves
+      moves,
+      winner,
+      gameover
     } = this.state;
 
     return (
@@ -66,6 +79,11 @@ export class Game extends Component {
           </div>        
         </div>
         <div className="text-center row" style={{"marginTop" : "30px"}}>
+          {gameover &&
+            <span class="label label-warning">
+              No more moves left.  Click on the 'Reset' button to restart the game.
+            </span>
+          }
           <button className="btn btn-success" onClick={this.refreshClick}>
             <i className="fa fa-refresh fa-2x" /> Reset
           </button>
@@ -75,8 +93,7 @@ export class Game extends Component {
   }
 }
 
-function calculateWinner(squares) {
-  console.log(squares);
+function calculateWinner(squares) {  
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
