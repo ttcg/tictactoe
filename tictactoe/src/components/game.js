@@ -21,15 +21,15 @@ export class Game extends Component {
 
 
   refreshClick = () => {
-    console.log("in refresh click");
-
     this.setState(this.initiateGameState());
   }
 
   squareClick = (index) => {
 
     // process only if the current index of the square is empty
-    if (this.state.numbers[index] === 9) {
+    // process only if the winner is not found yet
+    if (this.state.numbers[index] === 9 
+      && this.state.winner === "") {
 
       this.setState((prevState) => {
         prevState.numbers[index] = prevState.currentTurn === "X" ? 1 : 0;
@@ -46,13 +46,12 @@ export class Game extends Component {
 
   checkWinningState = () => {
     var foundWinner = calculateWinner(this.state.numbers);
-
     if (foundWinner) {
       this.setState((prevState) => {
       return {
         winner: prevState.currentTurn === "X" ? "O" : "X" // swap the current Turn again to get the real winner
       }});
-    } else if (this.state.History.length === 9) { // all turns done, no move to make
+    } else if (this.state.moves.length === 9) { // all turns done, no move to make
       this.setState({
         gameover: true
       })
@@ -60,7 +59,6 @@ export class Game extends Component {
   }
 
   render() {
-    //this.setState({ numbers:  });
     const {
       numbers,
       moves,
@@ -69,20 +67,26 @@ export class Game extends Component {
     } = this.state;
 
     return (
-      <div>
+      <div style={{"marginTop" : "30px"}}>
         <div className="row">
           <div className="col-md-offset-3 col-md-6">
             
               <Squares numbers={numbers} squareClick={this.squareClick} />
               
               <History moves={moves} />  
+
           </div>        
         </div>
         <div className="text-center row" style={{"marginTop" : "30px"}}>
           {gameover &&
-            <span class="label label-warning">
-              No more moves left.  Click on the 'Reset' button to restart the game.
-            </span>
+            <div className="alert alert-warning" role="alert">
+              No more moves left.  Click on the 'Reset' button to restart the game.  
+            </div>
+          }
+          {winner &&
+            <div className="alert alert-success" role="alert">
+              The winner is {winner}.  
+            </div>
           }
           <button className="btn btn-success" onClick={this.refreshClick}>
             <i className="fa fa-refresh fa-2x" /> Reset
@@ -106,8 +110,7 @@ function calculateWinner(squares) {
   ];
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] && squares[a] !== 9) {
-      console.log(squares[a]);
+    if (squares[a] === squares[b] && squares[a] === squares[c] && squares[a] !== 9) {
       return true;
     }
   }
